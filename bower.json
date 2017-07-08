@@ -1,0 +1,20 @@
+{
+  "name": "barbershop-adaptive",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "TheTedD.one"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/TheTedD-one/barbershop-adaptive",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "normalize-css": "normalize.css#^7.0.0"
+  }
+}
