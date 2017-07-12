@@ -1,0 +1,15 @@
+.clearfix() {
+  &::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+.container() {
+  @media @tablet-width {
+    width: 90%;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+}
