@@ -1,0 +1,27 @@
+.decorative-frame {
+  @media @mobile-width-only {
+    background-color: #242424;
+  }
+}
+
+.decorative-frame--white-bg {
+  @media @mobile-width-only {
+    background-color: #ffffff;
+  }
+  background-color: #ffffff;
+}
+
+.decorative-frame__item {
+  display: block;
+  width: 100%;
+  fill: @white;
+  &--gray {
+    fill: #252525;
+  }
+}
+
+.decorative-frame--bottom {
+  @media @tablet-width {
+    display: none;
+  }
+}

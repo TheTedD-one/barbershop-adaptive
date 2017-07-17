@@ -13,18 +13,16 @@
 
   text-decoration: none;
   color: @white;
-  &::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    margin-top: -8px;
+}
 
-    width: 16px;
-    height: 16px;
+.user-block__login-icon {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  margin-top: -8px;
 
-    background-color: #fff;
-  }
+  width: 20px;
+  fill: @white;
 }
 
 @media @tablet-width {
@@ -38,11 +36,27 @@
     font-size: 0;
     box-sizing: border-box;
   }
+
+  .user-block__link {
+    &:hover .user-block__login-icon {
+      fill: #826550;
+    }
+
+    &:active .user-block__login-icon {
+      fill: @white;
+      opacity: 1;
+    }
+  }
 }
 
 @media @desktop-width {
   .user-block {
     margin-left: 15%;
+
+  }
+
+  .user-block__login {
+    margin-right: 30px;
   }
 
   .user-block__link {
@@ -54,5 +68,14 @@
     line-height: 30px;
     font-weight: 700;
     text-transform: uppercase;
+
+    &:hover {
+      color: #826550;
+    }
+
+    &:active {
+      color: @white;
+      opacity: 0.3;
+    }
   }
 }

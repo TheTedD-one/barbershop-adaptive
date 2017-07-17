@@ -24,6 +24,11 @@
     "gulp-postcss": "^7.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-svgmin": "^1.2.4",
-    "gulp-svgstore": "^6.1.0"
+    "gulp-svgstore": "^6.1.0",
+    "gulp-uglify": "^3.0.0",
+    "gulp.spritesmith": "^6.5.1",
+    "main-bower-files": "^2.13.1",
+    "merge-stream": "^1.0.1",
+    "vinyl-buffer": "^1.0.0"
   }
 }

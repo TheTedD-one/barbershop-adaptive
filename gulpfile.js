@@ -15,31 +15,43 @@ const svgstore = require("gulp-svgstore");
 const postcss = require("gulp-postcss");
 const mqpacker = require("css-mqpacker");
 const concat = require("gulp-concat");
+const mainBowerFiles = require("main-bower-files");
+const uglify = require("gulp-uglify");
+const spritesmith = require("gulp.spritesmith");
+const buffer = require("vinyl-buffer");
+const merge = require("merge-stream");
 
 const path = {
   dist: {
     html: "dist/",
     css: "dist/css/",
+    js: "dist/js/",
     img: "dist/img/",
+    pngSprite: "dist/img/icon",
     svg: "temp/sprite.svg",
     fonts: "dist/fonts",
-    vendorCss: "dist/css/"
+    vendorCss: "dist/css/",
+    vendorJs: "dist/js"
   },
   src: {
     html: "src/pages/*.html",
     style: "src/style/main.less",
+    js: "src/js/main.js",
     img: "src/img/*.*",
+    pngSprite: "src/img/sprite/png/*.*",
     svg: "src/img/sprite/svg/*.svg",
     fonts: "src/fonts/**/*.*",
-    vendorCss: "bower_components/**/*.css"
+    vendorCss: "**/*.css",
+    vendorJs: "**/*.js"
   },
   watch: {
     html: "src/pages/**/*.html",
     style: "src/style/**/*.less",
+    js: "src/js/**/*.js",
     img: "src/img/*.*",
+    pngSprite: "src/img/sprite/png/*.*",
     svg: "src/img/sprite/svg/*.svg",
-    fonts: "src/fonts/**/*.*",
-    vendorCss: "bower_components/**/*.css"
+    fonts: "src/fonts/**/*.*"
   }
 };
 
@@ -73,18 +85,31 @@ gulp.task("style:build", function() {
     .pipe(less())
     .pipe(postcss([
       autoprefixer({
-        browsers: ['last 10 versions'],
+        browsers: ["last 10 versions"],
         cascade: false
       }),
       mqpacker({
         sort: true
       })
     ]))
-    .pipe(rename("style.css"))
-    .pipe(gulp.dest(path.dist.css))
     .pipe(csso())
     .pipe(rename("style.min.css"))
     .pipe(gulp.dest(path.dist.css));
+});
+
+gulp.task("js:build", function() {
+  return gulp.src(path.src.js)
+    .pipe(plumber({
+      errorHandler: notify.onError(function(err) {
+        return {
+          title: "js",
+          message: err.message
+        };
+      })
+    }))
+    // .pipe(uglify())
+    .pipe(rename("script.min.js"))
+    .pipe(gulp.dest(path.dist.js));
 });
 
 gulp.task("img:build", function() {
@@ -102,6 +127,27 @@ gulp.task("img:build", function() {
       imagemin.jpegtran({progressive: true})
     ]))
     .pipe(gulp.dest(path.dist.img));
+});
+
+gulp.task("pngSprite:build", function () {
+  var spriteData = gulp.src(path.src.pngSprite).pipe(spritesmith({
+    imgName: "sprite.png",
+    cssName: "sprite.less",
+    imgPath: "../img/icon/sprite.png",
+    cssVarMap: function(sprite) {
+       sprite.name = 'icon-' + sprite.name
+    }
+  }));
+
+  var imgStream = spriteData.img
+    .pipe(buffer())
+    .pipe(imagemin())
+    .pipe(gulp.dest(path.dist.pngSprite));
+
+  var cssStream = spriteData.css
+    .pipe(gulp.dest("src/helpers/"));
+
+  return merge(imgStream, cssStream);
 });
 
 gulp.task("svg:build", function() {
@@ -140,7 +186,7 @@ gulp.task("fonts:build", function() {
 });
 
 gulp.task("vendorCss:build", function() {
-  return gulp.src(path.src.vendorCss)
+  return gulp.src(mainBowerFiles(path.src.vendorCss))
     .pipe(plumber({
       errorHandler: notify.onError(function(err) {
         return {
@@ -149,31 +195,49 @@ gulp.task("vendorCss:build", function() {
         };
       })
     }))
-    .pipe(concat("vendors.css"))
+    .pipe(concat("vendors.min.css"))
     .pipe(csso())
     .pipe(gulp.dest(path.dist.vendorCss));
 });
 
+gulp.task("vendorJs:build", function() {
+  return gulp.src(mainBowerFiles(path.src.vendorJs))
+    .pipe(plumber({
+      errorHandler: notify.onError(function(err) {
+        return {
+          title: "vendorJs",
+          message: err.message
+        };
+      })
+    }))
+    .pipe(uglify())
+    .pipe(concat("vendors.min.js"))
+    .pipe(gulp.dest(path.dist.vendorJs));
+});
 
 gulp.task("build", gulp.series(
   "clean",
   gulp.parallel(
     "html:build",
     "style:build",
+    "js:build",
     "img:build",
+    "pngSprite:build",
     "svg:build",
     "fonts:build",
-    "vendorCss:build"
+    "vendorCss:build",
+    "vendorJs:build"
   )
 ));
 
 gulp.task("watch", function() {
   gulp.watch(path.watch.html, gulp.series("html:build"));
   gulp.watch(path.watch.style, gulp.series("style:build"));
+  gulp.watch(path.watch.js, gulp.series("js:build"));
   gulp.watch(path.watch.img, gulp.series("img:build"));
+  gulp.watch(path.watch.pngSprite, gulp.series("pngSprite:build"));
   gulp.watch(path.watch.svg, gulp.series("svg:build"));
   gulp.watch(path.watch.fonts, gulp.series("fonts:build"));
-  gulp.watch(path.watch.vendorCss, gulp.series("vendorCss:build"));
 });
 
 gulp.task("serve", function() {

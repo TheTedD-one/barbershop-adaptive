@@ -1,0 +1,75 @@
+// advantages style
+
+.owl-carousel.advantages__list .owl-dots {
+  position: absolute;
+  bottom: 3px;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.owl-carousel.advantages__list .owl-dot {
+  display: inline-block;
+  margin: 0 4%;
+}
+
+.owl-carousel.advantages__list .owl-dot span {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border: 1px solid  @white;
+  transform: rotate(45deg);
+}
+
+.owl-carousel.advantages__list .active span{
+  background-color: @white;
+}
+
+
+// feedback style
+
+.owl-carousel.feedback__content .owl-dots {
+  position: absolute;
+  bottom: 3px;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.owl-carousel.feedback__content .owl-dot {
+  display: inline-block;
+  padding: 0 4%;
+}
+
+.owl-carousel.feedback__content .owl-dot span {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border: 1px solid  #252525;
+  transform: rotate(45deg);
+}
+
+.owl-carousel.feedback__content .active>span{
+  background-color: #252525;
+}
+
+@media @tablet-width {
+  .owl-carousel.feedback__content .owl-dots {
+    bottom: -4px;
+  }
+
+  .owl-carousel.feedback__content .owl-dot {
+    background-color: @white;
+  }
+}
+
+@media @desktop-width {
+  .owl-carousel.feedback__content .owl-dots {
+    bottom: -50px;
+  }
+
+  .owl-carousel.feedback__content .owl-dot {
+    padding: 0 2%;
+    background-color: transparent;
+  }
+}
